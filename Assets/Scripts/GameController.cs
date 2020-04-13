@@ -19,8 +19,17 @@ public class GameController : MonoBehaviour
     private bool restart;
     private int score;
 
+    public AudioClip background;
+    public AudioClip victory;
+    public AudioClip loss;
+    public AudioSource audioSource;
+
     void Start()
     {
+        audioSource.volume = .4f;
+        audioSource.Stop();
+        audioSource.clip = background;
+        audioSource.Play();
         gameOver = false;
         restart = false;
         restartText.text = "";
@@ -43,7 +52,7 @@ public class GameController : MonoBehaviour
                 Instantiate(hazard, spawnPosition, spawnRotation);
                 if (gameOver)
                 {
-                    restartText.text = "Press any key EXCEPT 'R' to Restart.";
+                    restartText.text = "Press any key EXCEPT 'R', movement keys, or spacebar to Restart.";
                     restart = true;
                     break;
                 }
@@ -52,7 +61,7 @@ public class GameController : MonoBehaviour
 
             if (gameOver)
             {
-                restartText.text = "Press any key EXCEPT 'R' to Restart.";
+                restartText.text = "Press any key EXCEPT 'R', movement keys, or spacebar to Restart.";
                 restart = true;
                 break;
             }
@@ -61,7 +70,7 @@ public class GameController : MonoBehaviour
             
             if (gameOver)
             {
-                restartText.text = "Press any key EXCEPT 'R' to Restart.";
+                restartText.text = "Press any key EXCEPT 'R', movement keys, or spacebar to Restart.";
                 restart = true;
                 break;
             }
@@ -81,6 +90,10 @@ public class GameController : MonoBehaviour
         if (score >= 100)
         {
             gameOverText.text = "You win! Game Created by Seth Grimes!";
+            audioSource.Stop();
+            audioSource.volume = 0.25f;
+            audioSource.clip = victory;
+            audioSource.Play();
             gameOver = true;
             restart = true;
         }
@@ -93,6 +106,13 @@ public class GameController : MonoBehaviour
 
     public void GameOver()
     {
+        if ( score < 100 )
+        {
+            audioSource.Stop();
+            audioSource.volume = 1.0f;
+            audioSource.clip = loss;
+            audioSource.Play();
+        }
         gameOverText.text = "Game Over";
         gameOver = true;
     }

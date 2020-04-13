@@ -39,7 +39,6 @@ public class ZoomInverse : MonoBehaviour
         if (gameOver && !gameOverHappenedAlready)
         {
             otherStarfield.SetActive(true);
-            Debug.Log("Set other starfield active!");
             gameObject.SetActive(false);
             gameOverHappenedAlready = true;
         }

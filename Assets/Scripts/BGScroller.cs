@@ -49,8 +49,6 @@ public class BGScroller : MonoBehaviour
 
                 starfield2.SetActive(false);
 
-                Debug.Log("Set original starfield active!");
-
                 break;
             }
             else
