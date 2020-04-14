@@ -24,37 +24,38 @@ public class DestroyByContact : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Boundary") || other.CompareTag("Enemy"))
+        if (other.CompareTag("Boundary") || other.CompareTag("Enemy") || other.CompareTag("ShieldPowerup") || other.CompareTag("SpeedPowerup"))
             return;
 
-        if ( explosion != null )
+        if ( explosion != null && other.CompareTag("Shield"))
             Instantiate(explosion, transform.position, transform.rotation);
 
-        if (other.tag == "Player")
+        if (explosion != null && !other.CompareTag("Shield"))
+            Instantiate(explosion, transform.position, transform.rotation);
+        
+        if (other.CompareTag("Player"))
         {
             Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
             gameController.GameOver();
         }
+        
+        if (!other.CompareTag("Player"))
+            gameController.AddScore(scoreValue);
 
-        gameController.AddScore(scoreValue);
-        Destroy(other.gameObject);
+        if ( !other.CompareTag("Shield") && !other.CompareTag("ShieldPowerup"))
+            Destroy(other.gameObject);
+
+        if (other.CompareTag("Shield") || other.CompareTag("ShieldPowerup"))
+        {
+            other.gameObject.SetActive(false);
+        }
+
         Destroy(gameObject);
     }
 
     private void Update()
     {
-        /*
-        boo = obj.GetComponent<GameController>().GetGameOver();
-        if ( boo )
-            DestroyByGameOver();
-            */
+
     }
     
-    /*
-    private void DestroyByGameOver()
-    {
-            Debug.Log("Game over happened");
-            Destroy(gameObject);
-    }
-    */
 }

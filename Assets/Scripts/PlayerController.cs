@@ -10,6 +10,7 @@ public class Boundary
 public class PlayerController : MonoBehaviour
 {
     public float speed;
+    public float twoTimesOriginalSpeed;
     public float tilt;
     public Boundary boundary;
     public GameObject shot;
@@ -18,13 +19,17 @@ public class PlayerController : MonoBehaviour
     private float nextFire;
     public AudioSource audioSource;
     public AudioClip shotSFX;
+    public AudioSource audioSource2;
+    public AudioClip audioClip2;
 
     private Rigidbody rb;
 
     private void Start()
     {
+        twoTimesOriginalSpeed = speed * 2;
         rb = GetComponent<Rigidbody>();
         audioSource.clip = shotSFX;
+        audioSource2.clip = audioClip2;
     }
 
     void Update()
@@ -60,4 +65,29 @@ public class PlayerController : MonoBehaviour
 
         rb.rotation = Quaternion.Euler(0.0f, 0.0f, rb.velocity.x * -tilt);
     }
-}
+
+    public void SetSpeed(float newSpeed)
+    {
+        speed = newSpeed;
+    }
+
+    public float GetSpeed()
+    {
+        return speed;
+    }
+
+    public float GetTwoSpeed()
+    {
+        return twoTimesOriginalSpeed;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("SpeedPowerup"))
+        {
+            audioSource2.Play();
+            other.gameObject.SetActive(false);
+        }
+    }
+
+    }

@@ -6,8 +6,13 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     public GameObject[] hazards;
+
+    public GameObject shieldPowerup;
+
     public Vector3 spawnValues;
+
     public int hazardCount;
+
     public float spawnWait;
     public float startWait;
     public float waveWait;
@@ -15,8 +20,12 @@ public class GameController : MonoBehaviour
     public Text restartText;
     public Text gameOverText;
     public Text ScoreText;
+
     private bool gameOver;
     private bool restart;
+    private bool shieldPowerupExists;
+    private bool speedPowerupExists;
+
     private int score;
 
     public AudioClip background;
@@ -44,15 +53,30 @@ public class GameController : MonoBehaviour
         yield return new WaitForSeconds(startWait);
         while (true)
         {
+            shieldPowerupExists = false;
+            speedPowerupExists = false;
             for (int i = 0; i < hazardCount; i++)
             {
+                
                 GameObject hazard = hazards[Random.Range(0, hazards.Length)];
+
+                while ( ( shieldPowerupExists && hazard.CompareTag("ShieldPowerup") ) || ( speedPowerupExists && hazard.CompareTag("SpeedPowerup")))
+                {
+                    hazard = hazards[Random.Range(0, hazards.Length)];
+                }
+
+                    if (hazard.CompareTag("ShieldPowerup"))
+                        shieldPowerupExists = true;
+
+                    if (hazard.CompareTag("SpeedPowerup"))
+                        speedPowerupExists = true;
+
                 Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
                 Quaternion spawnRotation = Quaternion.identity;
                 Instantiate(hazard, spawnPosition, spawnRotation);
                 if (gameOver)
                 {
-                    restartText.text = "Press any key EXCEPT 'R', movement keys, or spacebar to Restart.";
+                    restartText.text = "Press 'Q' to Restart.";
                     restart = true;
                     break;
                 }
@@ -61,7 +85,7 @@ public class GameController : MonoBehaviour
 
             if (gameOver)
             {
-                restartText.text = "Press any key EXCEPT 'R', movement keys, or spacebar to Restart.";
+                restartText.text = "Press 'Q' to Restart.";
                 restart = true;
                 break;
             }
@@ -70,7 +94,7 @@ public class GameController : MonoBehaviour
             
             if (gameOver)
             {
-                restartText.text = "Press any key EXCEPT 'R', movement keys, or spacebar to Restart.";
+                restartText.text = "Press 'Q' to Restart.";
                 restart = true;
                 break;
             }
@@ -121,7 +145,7 @@ public class GameController : MonoBehaviour
     {
         if (restart)
         {
-            if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.Q))
             {
                 SceneManager.LoadScene("Main");
             }
@@ -134,6 +158,11 @@ public class GameController : MonoBehaviour
     public bool GetGameOver()
     {
         return gameOver;
+    }
+
+    public void activateShieldPowerup()
+    {
+        shieldPowerup.SetActive(true);
     }
 
 }

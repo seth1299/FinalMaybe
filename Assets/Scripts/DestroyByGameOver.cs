@@ -31,7 +31,14 @@ public class DestroyByGameOver : MonoBehaviour
 
         if ( sc >= 100 || gameOver )
         {
-            Destroy(gameObject);
+            if (this.CompareTag("SpeedPowerup") || this.CompareTag("ShieldPowerup"))
+                gameObject.SetActive(false);
+
+            else
+            {
+                Destroy(gameObject);
+            }
+            
         }
     }
 }
